@@ -1,7 +1,7 @@
 // create a start button; on.click, game starts, 30-second timer activates, first question in questions array shows up
 // if user clicks correct answer: timer stops, text shows CORRECT and image associated with answer, correctAnswers++, and another timer activates that moves to the next question something around 3 seconds
 // if user clicks incorrect answer, timer stops, text shows INCORRECT, The correct answer was: and image associated with answer, incorrectAnswers++, and another timer activates that moves to the next question something around 3 seconds
-// if timer runs out before user selects an answer, text shows TIME'S UP, The correct answer was: and image associated with answer, timeOuts++, another timer activates that moves to next question 3 seconds-ish
+
 // variable to select item; single loop through answer array -- then stop??? or... return false?
 // if user reaches end of questions array, show GAME OVER!, show total correctAnswers, total incorrectAnswers, total timeOuts, and a button to reset the game
 
@@ -17,12 +17,41 @@
 // INITIALIZE / GLOBAL VARIABLES
 //////////////////////////////////////////////////////////////////////////////
 
-
 $(document).ready(function () {
 
-    var answer = "";
-    var seconds = 10;
+    var guessTimer = 10;
     var intervalId;
+    var rightAnswers;
+    var wrongAnswers;
+    var gameLength;
+
+    var gameKey = [
+        {
+            question: "Changing the number of ____ in an atom forms ions.",
+            choices: ["protons", "electrons", "neutrons"],
+            answer: 1
+        },
+        {
+            question: "The same elements occur everywhere in the universe.",
+            choices: ["true", "false"],
+            answer: 0
+        },
+        {
+            question: "An element's atomic number comes from the number of ____ in it.",
+            choices: ["protons", "electrons", "neutrons"],
+            answer: 0
+        },
+        {
+            question: "This was the first man-made element.",
+            choices: ["Einsteinium", "Astatine", "Plutonium", "Technetium"],
+            answer: 3
+        },
+        {
+            question: "The most common element, by mass, is:",
+            choices: ["Hydrogen", "Helium", "Oxygen"],
+            answer: 2
+        }
+    ];
 
     //////////////////////////////////////////////////////////////////////////////
     // TIMER FUNCTIONS
@@ -34,12 +63,13 @@ $(document).ready(function () {
     }
 
     function decrement() {
-        seconds--;
-        $("#timer").html("<h2>Time remaining: " + seconds + " seconds</h2>");
+        guessTimer--;
+        $("#timer").html("<h2>Time remaining: " + guessTimer + " seconds</h2>");
 
-        if (seconds === 0) {
+        if (guessTimer === 0) {
             stop();
-            alert("Time's up!");
+            // alert("Time's up!");
+            // if timer runs out before user selects an answer, text shows TIME'S UP, The correct answer was: and image associated with answer, timeOuts++, another timer activates that moves to next question 3 seconds-ish
         }
     }
 
@@ -51,45 +81,31 @@ $(document).ready(function () {
     // GAME FUNCTIONS
     //////////////////////////////////////////////////////////////////////////////
 
-    function showQuestions() {
+    function startGame() {
+        gameLength = gameKey.length;
+    }
 
-        var gameKey = [
-            {
-                question: "Changing the number of ____ in an atom forms ions.",
-                choices: ["protons", "electrons", "neutrons"],
-                answer: 1
-            },
-            {
-                question: "The same elements occur everywhere in the universe.",
-                choices: ["true", "false"],
-                answer: 0
-            },
-            {
-                question: "An element's atomic number comes from the number of ____ in it.",
-                choices: ["protons", "electrons", "neutrons"],
-                answer: 0
-            },
-            {
-                question: "This was the first man-made element.",
-                choices: ["Einsteinium", "Astatine", "Plutonium", "Technetium"],
-                answer: 3
-            },
-            {
-                question: "The most common element, by mass, is:",
-                choices: ["Hydrogen", "Helium", "Oxygen"],
-                answer: 2
+    function newQuestion() {
+        if (rightAnswers + wrongAnswers >= gameLength) {
+            gameOver();
+        } else {
+
+            // generate a random question
+            var randomQ = Math.floor(Math.random() * gameKey.length);
+            currentQ = gameKey[randomQ];
+            console.log(currentQ);
+            var q = currentQ.question;
+            $("#question").append(q);
+
+            // show answer choices
+            for (var i = 0; i < currentQ.choices.length; i++) {
+                var a = currentQ.choices[i];
+                $("#answerButtons").append(a);
             }
-        ];
 
-        for(var i = 0; i < gameKey.length; i++){
-            var q = gameKey[i];
-            $("#question").append(q.question);
-
-            for (var j = 0; j < question.choices.length; j++) {
-                $("answerButtons").append(question.choices[j]);
-            }
+            // start the timer
+            runTimer();
         }
-
     }
 
 
@@ -100,8 +116,7 @@ $(document).ready(function () {
 
     $("#startButton").on("click", function () {
         $("#startButton").hide();
-        runTimer();
-        showQuestions();
+        newQuestion();
     });
 
 });
