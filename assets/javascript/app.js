@@ -21,10 +21,9 @@ $(document).ready(function () {
 
     var guessTimer = 10;
     var intervalId;
-    var rightAnswers;
-    var wrongAnswers;
-    var timeOuts;
-    var gameLength;
+    var rightAnswers = 0;
+    var wrongAnswers = 0;
+    var timeOuts = 0;
 
     var gameKey = [
         {
@@ -53,6 +52,8 @@ $(document).ready(function () {
             answer: "Oxygen"
         }
     ];
+
+    var gameLength = gameKey.length;
 
     //////////////////////////////////////////////////////////////////////////////
     // TIMER FUNCTIONS
@@ -85,18 +86,18 @@ $(document).ready(function () {
     function newQuestion() {
 
         // stops question generation when game's over
-        if (rightAnswers + wrongAnswers >= gameLength) {
+        if ((rightAnswers + wrongAnswers + timeOuts) >= gameLength) {
             gameOver();
+
         } else {
 
-            // resets scoreboard
-            rightAnswers = 0;
-            wrongAnswers = 0;
-            timeOuts = 0;
+            // empty question/answers
+            $("#question").empty();
+            $("#answers").empty();
 
             // generate a random question
             var randomQ = Math.floor(Math.random() * gameKey.length);
-            currentQ = gameKey[randomQ];
+            var currentQ = gameKey[randomQ];
             console.log(currentQ);
             var q = currentQ.question;
             $("#question").append(q);
@@ -108,33 +109,45 @@ $(document).ready(function () {
                 $("#answers").append("<div class='answer'>" + answerBank + "</div>"); // shows answers
             }
 
-            // stores answer as index
+            // store answer
             var a = currentQ.answer;
             console.log(a);
 
             // start the timer
             runTimer();
 
-            // answer calculator
-            $(".answer").on("click", function () {
-
-                // console.log(this.innerHTML);
-
-                var userGuess = (this).innerHTML;
-                console.log(userGuess);
-
-                if (userGuess === a) {
-                    rightAnswers++;
-                    console.log(rightAnswers);
-                } else if (userGuess !== a) {
-                    wrongAnswers++;
-                } else {
-                    timeOuts++;
-                }
-            })
-
-
         }
+    }
+
+    function userGuess() {
+        // answer calculator
+        $(".answer").on("click", function () {
+
+            var userGuess = (this).innerHTML;
+            console.log(userGuess);
+
+            if (userGuess === gameKey.answer) {
+                rightAnswers++;
+                console.log(rightAnswers);
+                newQuestion();
+            } else if (userGuess !== gameKey.answer) {
+                wrongAnswers++;
+                console.log(wrongAnswers);
+                newQuestion();
+            } else {
+                timeOuts++;
+                console.log(timeOuts);
+                newQuestion();
+            }
+        })
+    }
+    
+    function gameOver () {
+
+        // show scoreboard
+        $("#finalScore").append("<div>Right answers: " + rightAnswers + "</div>" +
+                                "<div>Wrong answers: " + wrongAnswers + "</div>" +
+                                "<div>Timeouts: " + timeOuts + "</div>")
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -144,6 +157,8 @@ $(document).ready(function () {
     $("#startButton").on("click", function () {
         $("#startButton").hide();
         newQuestion();
+        userGuess();
+
     });
 
 });
