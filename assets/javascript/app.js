@@ -85,38 +85,41 @@ $(document).ready(function () {
 
     function newQuestion() {
 
-        // stops question generation when game's over
-        if ((rightAnswers + wrongAnswers + timeOuts) >= gameLength) {
-            gameOver();
+        // // stops question generation when game's over
+        // if ((rightAnswers + wrongAnswers + timeOuts) >= gameLength) {
+        //     gameOver();
 
-        } else {
+        // } else {
 
-            // empty question/answers
-            $("#question").empty();
-            $("#answers").empty();
+        // empty question/answers
+        $("#question").empty();
+        $("#answers").empty();
 
-            // generate a random question
-            var randomQ = Math.floor(Math.random() * gameKey.length);
-            var currentQ = gameKey[randomQ];
-            console.log(currentQ);
-            var q = currentQ.question;
-            $("#question").append(q);
+        // generate a random question
+        var randomQ = Math.floor(Math.random() * gameKey.length);
+        var currentQ = gameKey[randomQ];
+        console.log(currentQ);
 
-            // show answer choices
-            for (var i = 0; i < currentQ.choices.length; i++) {
-                var answerBank = currentQ.choices[i];
-                console.log(answerBank); // logs all answers
-                $("#answers").append("<div class='answer'>" + answerBank + "</div>"); // shows answers
-            }
+        // show random question in browser
+        var q = currentQ.question;
+        $("#question").append(q);
 
-            // store answer
-            var a = currentQ.answer;
-            console.log(a);
-
-            // start the timer
-            runTimer();
-
+        // show answer choices in browser
+        for (var i = 0; i < currentQ.choices.length; i++) {
+            var answerBank = currentQ.choices[i];
+            console.log(answerBank); // logs all answers
+            $("#answers").append("<div class='answer'>" + answerBank + "</div>"); // shows answers
         }
+
+        // store correct answer
+        var a = currentQ.answer;
+        console.log(a);
+
+        // start the timer
+        runTimer();
+        userGuess();
+
+
     }
 
     function userGuess() {
@@ -141,19 +144,19 @@ $(document).ready(function () {
             }
         })
     }
-    
-    function gameOver () {
+
+    function gameOver() {
 
         // show scoreboard
         $("#finalScore").append("<div>Right answers: " + rightAnswers + "</div>" +
-                                "<div>Wrong answers: " + wrongAnswers + "</div>" +
-                                "<div>Timeouts: " + timeOuts + "</div>")
+            "<div>Wrong answers: " + wrongAnswers + "</div>" +
+            "<div>Timeouts: " + timeOuts + "</div>")
     }
 
     //////////////////////////////////////////////////////////////////////////////
     // START GAME
     //////////////////////////////////////////////////////////////////////////////
-
+    
     $("#startButton").on("click", function () {
         $("#startButton").hide();
         newQuestion();
