@@ -23,33 +23,34 @@ $(document).ready(function () {
     var intervalId;
     var rightAnswers;
     var wrongAnswers;
+    var timeOuts;
     var gameLength;
 
     var gameKey = [
         {
             question: "Changing the number of ____ in an atom forms ions.",
             choices: ["protons", "electrons", "neutrons"],
-            answer: 1
+            answer: "electrons"
         },
         {
             question: "The same elements occur everywhere in the universe.",
             choices: ["true", "false"],
-            answer: 0
+            answer: "true"
         },
         {
             question: "An element's atomic number comes from the number of ____ in it.",
             choices: ["protons", "electrons", "neutrons"],
-            answer: 0
+            answer: "protons"
         },
         {
             question: "This was the first man-made element.",
             choices: ["Einsteinium", "Astatine", "Plutonium", "Technetium"],
-            answer: 3
+            answer: "Technetium"
         },
         {
             question: "The most common element, by mass, is:",
             choices: ["Hydrogen", "Helium", "Oxygen"],
-            answer: 2
+            answer: "Oxygen"
         }
     ];
 
@@ -81,14 +82,17 @@ $(document).ready(function () {
     // GAME FUNCTIONS
     //////////////////////////////////////////////////////////////////////////////
 
-    function startGame() {
-        gameLength = gameKey.length;
-    }
-
     function newQuestion() {
+
+        // stops question generation when game's over
         if (rightAnswers + wrongAnswers >= gameLength) {
             gameOver();
         } else {
+
+            // resets scoreboard
+            rightAnswers = 0;
+            wrongAnswers = 0;
+            timeOuts = 0;
 
             // generate a random question
             var randomQ = Math.floor(Math.random() * gameKey.length);
@@ -99,18 +103,39 @@ $(document).ready(function () {
 
             // show answer choices
             for (var i = 0; i < currentQ.choices.length; i++) {
-                var a = currentQ.choices[i];
-                console.log(a); // logs all answers
-
-                $("#answerButtons").append("<div>" + a + "</div>");
+                var answerBank = currentQ.choices[i];
+                console.log(answerBank); // logs all answers
+                $("#answers").append("<div class='answer'>" + answerBank + "</div>"); // shows answers
             }
+
+            // stores answer as index
+            var a = currentQ.answer;
+            console.log(a);
 
             // start the timer
             runTimer();
+
+            // answer calculator
+            $(".answer").on("click", function () {
+
+                // console.log(this.innerHTML);
+
+                var userGuess = (this).innerHTML;
+                console.log(userGuess);
+
+                if (userGuess === a) {
+                    rightAnswers++;
+                    console.log(rightAnswers);
+                } else if (userGuess !== a) {
+                    wrongAnswers++;
+                } else {
+                    timeOuts++;
+                }
+            })
+
+
         }
     }
-
-
 
     //////////////////////////////////////////////////////////////////////////////
     // START GAME
