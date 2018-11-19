@@ -100,7 +100,9 @@ $(document).ready(function () {
             // show answer choices
             for (var i = 0; i < currentQ.choices.length; i++) {
                 var a = currentQ.choices[i];
-                $("#answerButtons").append(a);
+                console.log(a); // logs all answers
+
+                $("#answerButtons").append("<div>" + a + "</div>");
             }
 
             // start the timer
