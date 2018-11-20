@@ -70,8 +70,7 @@ $(document).ready(function () {
 
         if (guessTimer === 0) {
             stop();
-            // alert("Time's up!");
-            // if timer runs out before user selects an answer, text shows TIME'S UP, The correct answer was: and image associated with answer, timeOuts++, another timer activates that moves to next question 3 seconds-ish
+            timeOut();
         }
     }
 
@@ -83,6 +82,39 @@ $(document).ready(function () {
     // GAME FUNCTIONS
     //////////////////////////////////////////////////////////////////////////////
 
+    function rightAnswer() {
+        rightAnswers++;
+        console.log(rightAnswers);
+        reset();
+        $("#question").html("<h3>Correct!</h3>");
+        $("#answers").append("<img src='https://via.placeholder.com/150'/>");
+        setTimeout(newQuestion, 3000);
+    }
+
+    function wrongAnswer() {
+        wrongAnswers++;
+        console.log(wrongAnswers);
+        reset();
+        $("#question").html("<h3>Incorrect!</h3>");
+        $("#answers").append("<img src='https://via.placeholder.com/150'/>");
+        setTimeout(newQuestion, 3000);
+    }
+
+    function timeOut() {
+        timeOuts++;
+        console.log(timeOuts);
+        reset();
+        $("#question").html("<h3>Time's up!</h3>");
+        $("#answers").append("<img src='https://via.placeholder.com/150'/>");
+        setTimeout(newQuestion, 3000);
+    }
+
+    function reset() {
+        $("#question").empty();
+        $("#answers").empty();
+        stop();
+    }
+
     function newQuestion() {
 
         reset();
@@ -92,6 +124,9 @@ $(document).ready(function () {
             gameOver();
 
         } else {
+
+            // start the timer
+            runTimer();
 
             // generate a random question
             var randomQ = Math.floor(Math.random() * gameKey.length);
@@ -113,32 +148,22 @@ $(document).ready(function () {
             var a = currentQ.answer;
             console.log(a);
 
-            // start the timer
-            runTimer();
-
-            // active user interactivity
+            // activate user interactivity
             userGuess();
 
             function userGuess() {
-                // answer calculator
+
                 $(".answer").on("click", function () {
 
                     var userGuess = (this).innerHTML;
                     console.log(userGuess);
 
-
                     if (userGuess === a) {
-                        rightAnswers++;
-                        console.log(rightAnswers);
-                        newQuestion();
+                        rightAnswer();
                     } else if (userGuess !== a) {
-                        wrongAnswers++;
-                        console.log(wrongAnswers);
-                        newQuestion();
+                        wrongAnswer();
                     } else {
-                        timeOuts++;
-                        console.log(timeOuts);
-                        newQuestion();
+                        timeOut();
                     }
                 })
             }
@@ -147,11 +172,38 @@ $(document).ready(function () {
 
     }
 
-    function reset() {
-        $("#question").empty();
-        $("#answers").empty();
-        stop();
-    }
+    // function rightAnswer() {
+    //     rightAnswers++;
+    //     console.log(rightAnswers);
+    //     reset();
+    //     $("#question").html("<h3>Correct!</h3>");
+    //     $("#answers").append("<img src='https://via.placeholder.com/150'/>");
+    //     setTimeout(newQuestion, 3000);
+    // }
+
+    // function wrongAnswer() {
+    //     wrongAnswers++;
+    //     console.log(wrongAnswers);
+    //     reset();
+    //     $("#question").html("<h3>Incorrect!</h3>");
+    //     $("#answers").append("<img src='https://via.placeholder.com/150'/>");
+    //     setTimeout(newQuestion, 3000);
+    // }
+
+    // function timeOut() {
+    //     timeOuts++;
+    //     console.log(timeOuts);
+    //     reset();
+    //     $("#question").html("<h3>Time's up!</h3>");
+    //     $("#answers").append("<img src='https://via.placeholder.com/150'/>");
+    //     setTimeout(newQuestion, 3000);
+    // }
+
+    // function reset() {
+    //     $("#question").empty();
+    //     $("#answers").empty();
+    //     stop();
+    // }
 
     function gameOver() {
 
@@ -161,6 +213,9 @@ $(document).ready(function () {
         $("#finalScore").append("<div>Right answers: " + rightAnswers + "</div>" +
             "<div>Wrong answers: " + wrongAnswers + "</div>" +
             "<div>Timeouts: " + timeOuts + "</div>")
+
+        // show play again button
+        $("#playAgain").append("<button>" + "Try again!" + "</button>");
     }
 
     //////////////////////////////////////////////////////////////////////////////
