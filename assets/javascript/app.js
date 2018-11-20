@@ -85,67 +85,77 @@ $(document).ready(function () {
 
     function newQuestion() {
 
+        reset();
+
         // // stops question generation when game's over
-        // if ((rightAnswers + wrongAnswers + timeOuts) >= gameLength) {
-        //     gameOver();
+        if ((rightAnswers + wrongAnswers + timeOuts) >= gameLength) {
+            gameOver();
 
-        // } else {
+        } else {
 
-        // empty question/answers
-        $("#question").empty();
-        $("#answers").empty();
+            // generate a random question
+            var randomQ = Math.floor(Math.random() * gameKey.length);
+            var currentQ = gameKey[randomQ];
+            console.log(currentQ);
 
-        // generate a random question
-        var randomQ = Math.floor(Math.random() * gameKey.length);
-        var currentQ = gameKey[randomQ];
-        console.log(currentQ);
+            // show random question in browser
+            var q = currentQ.question;
+            $("#question").append(q);
 
-        // show random question in browser
-        var q = currentQ.question;
-        $("#question").append(q);
+            // show answer choices in browser
+            for (var i = 0; i < currentQ.choices.length; i++) {
+                var answerBank = currentQ.choices[i];
+                console.log(answerBank); // logs all answers
+                $("#answers").append("<div class='answer'>" + answerBank + "</div>"); // shows answers
+            }
 
-        // show answer choices in browser
-        for (var i = 0; i < currentQ.choices.length; i++) {
-            var answerBank = currentQ.choices[i];
-            console.log(answerBank); // logs all answers
-            $("#answers").append("<div class='answer'>" + answerBank + "</div>"); // shows answers
+            // store correct answer
+            var a = currentQ.answer;
+            console.log(a);
+
+            // start the timer
+            runTimer();
+
+            // active user interactivity
+            userGuess();
+
+            function userGuess() {
+                // answer calculator
+                $(".answer").on("click", function () {
+
+                    var userGuess = (this).innerHTML;
+                    console.log(userGuess);
+
+
+                    if (userGuess === a) {
+                        rightAnswers++;
+                        console.log(rightAnswers);
+                        newQuestion();
+                    } else if (userGuess !== a) {
+                        wrongAnswers++;
+                        console.log(wrongAnswers);
+                        newQuestion();
+                    } else {
+                        timeOuts++;
+                        console.log(timeOuts);
+                        newQuestion();
+                    }
+                })
+            }
+
         }
-
-        // store correct answer
-        var a = currentQ.answer;
-        console.log(a);
-
-        // start the timer
-        runTimer();
-        userGuess();
-
 
     }
 
-    function userGuess() {
-        // answer calculator
-        $(".answer").on("click", function () {
-
-            var userGuess = (this).innerHTML;
-            console.log(userGuess);
-
-            if (userGuess === gameKey.answer) {
-                rightAnswers++;
-                console.log(rightAnswers);
-                newQuestion();
-            } else if (userGuess !== gameKey.answer) {
-                wrongAnswers++;
-                console.log(wrongAnswers);
-                newQuestion();
-            } else {
-                timeOuts++;
-                console.log(timeOuts);
-                newQuestion();
-            }
-        })
+    function reset() {
+        $("#question").empty();
+        $("#answers").empty();
+        stop();
     }
 
     function gameOver() {
+
+        reset();
 
         // show scoreboard
         $("#finalScore").append("<div>Right answers: " + rightAnswers + "</div>" +
@@ -156,12 +166,10 @@ $(document).ready(function () {
     //////////////////////////////////////////////////////////////////////////////
     // START GAME
     //////////////////////////////////////////////////////////////////////////////
-    
+
     $("#startButton").on("click", function () {
         $("#startButton").hide();
         newQuestion();
-        userGuess();
-
     });
 
 });
