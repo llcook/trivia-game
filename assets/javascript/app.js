@@ -1,18 +1,3 @@
-// create a start button; on.click, game starts, 30-second timer activates, first question in questions array shows up
-// if user clicks correct answer: timer stops, text shows CORRECT and image associated with answer, correctAnswers++, and another timer activates that moves to the next question something around 3 seconds
-// if user clicks incorrect answer, timer stops, text shows INCORRECT, The correct answer was: and image associated with answer, incorrectAnswers++, and another timer activates that moves to the next question something around 3 seconds
-
-// variable to select item; single loop through answer array -- then stop??? or... return false?
-// if user reaches end of questions array, show GAME OVER!, show total correctAnswers, total incorrectAnswers, total timeOuts, and a button to reset the game
-
-// function reset: correctAnswers: 0; incorrectAnswers: 0, timeOuts: 0, show START button
-
-// questions page: timer, question, list of answers
-
-// answer page: tells correct or incorrect; if incorrect, timer keeps going and brings you back to quesiton; if correct, goes to next question; if timeout, shows correct answer, then goes to next question
-
-// end page: shows correct answers, incorrect answers, timeouts; then a click to reset the game (does NOT reload)
-
 //////////////////////////////////////////////////////////////////////////////
 // INITIALIZE / GLOBAL VARIABLES
 //////////////////////////////////////////////////////////////////////////////
@@ -82,6 +67,13 @@ $(document).ready(function () {
     // GAME FUNCTIONS
     //////////////////////////////////////////////////////////////////////////////
 
+    function reset() {
+        $("#question").empty();
+        $("#answers").empty();
+        stop();
+        guessTimer = 10;
+    }
+
     function rightAnswer() {
         rightAnswers++;
         console.log(rightAnswers);
@@ -109,17 +101,11 @@ $(document).ready(function () {
         setTimeout(newQuestion, 3000);
     }
 
-    function reset() {
-        $("#question").empty();
-        $("#answers").empty();
-        stop();
-    }
-
     function newQuestion() {
 
         reset();
 
-        // // stops question generation when game's over
+        // // stops question generation after length of array (5 questions)
         if ((rightAnswers + wrongAnswers + timeOuts) >= gameLength) {
             gameOver();
 
@@ -167,43 +153,8 @@ $(document).ready(function () {
                     }
                 })
             }
-
         }
-
     }
-
-    // function rightAnswer() {
-    //     rightAnswers++;
-    //     console.log(rightAnswers);
-    //     reset();
-    //     $("#question").html("<h3>Correct!</h3>");
-    //     $("#answers").append("<img src='https://via.placeholder.com/150'/>");
-    //     setTimeout(newQuestion, 3000);
-    // }
-
-    // function wrongAnswer() {
-    //     wrongAnswers++;
-    //     console.log(wrongAnswers);
-    //     reset();
-    //     $("#question").html("<h3>Incorrect!</h3>");
-    //     $("#answers").append("<img src='https://via.placeholder.com/150'/>");
-    //     setTimeout(newQuestion, 3000);
-    // }
-
-    // function timeOut() {
-    //     timeOuts++;
-    //     console.log(timeOuts);
-    //     reset();
-    //     $("#question").html("<h3>Time's up!</h3>");
-    //     $("#answers").append("<img src='https://via.placeholder.com/150'/>");
-    //     setTimeout(newQuestion, 3000);
-    // }
-
-    // function reset() {
-    //     $("#question").empty();
-    //     $("#answers").empty();
-    //     stop();
-    // }
 
     function gameOver() {
 
@@ -216,6 +167,9 @@ $(document).ready(function () {
 
         // show play again button
         $("#playAgain").append("<button>" + "Try again!" + "</button>");
+
+        // THIS CLICK EVENT APPENDS THE BUTTON AND SCOREBOARD INFINITELY:
+        // $("#playAgain").on("click", newQuestion());
     }
 
     //////////////////////////////////////////////////////////////////////////////
