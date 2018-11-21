@@ -1,4 +1,114 @@
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* background animation by @P1N20 https://codepen.io/P1N2O/ */
+/* colors by llcook */
+
 body {
-    /* background-image: url("../images/starbg.gif"); */
-    /* background-color: blue; */
+	width: 100wh;
+	height: 90vh;
+	color: #fff;
+	background: linear-gradient(-45deg,#0a0a0a, #bebaba, #0a0a0a, #fff, #0a0a0a, #bebaba);
+	background-size: 400% 400%;
+	-webkit-animation: Gradient 15s ease infinite;
+	-moz-animation: Gradient 15s ease infinite;
+    animation: Gradient 15s ease infinite;
+    
+    /* added */
+    margin: 60px 0 0 30px;
+}
+
+@-webkit-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+@-moz-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+@keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+/* custom styling */
+
+/* h1,
+h6 {
+	font-family: 'Open Sans';
+	font-weight: 300;
+	text-align: center;
+	position: absolute;
+	top: 45%;
+	right: 0;
+	left: 0;
+} */
+
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 300;
+	letter-spacing: 0px;
+	margin-left: 10px;
+    color: rgb(255, 255, 255); opacity: 0.5
+
+}
+
+#question,
+#answers,
+#timer,
+#finalScore {
+    background-color: black;
+    color: white;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+	font-weight: 300;
+    letter-spacing: 2px;
+    padding: 30px;
+}
+
+button {
+    border: none;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+	letter-spacing: 2px;
+    padding: 20px 20px 20px 30px;
+    opacity: 1;
+    background-color: rgb(88, 54, 241); opacity: 1;
+}
+
+section {
+    opacity: 1;
+	background-color: black; opacity: 0.5;
+	height: 100%;
+	margin: 60px 0 0 30px;
+	position: relative;
+    width: 100%;
 }

@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
     
-        <title>Trivia Game</title>
+        <title>Elemental trivia</title>
 
         <meta charset="UTF=8"/>        
         
@@ -11,21 +11,28 @@
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
         
-        <link rel="stylesheet" href="assets/css.reset.css"/>
+        <!-- <link href="https://fonts.googleapis.com/css?family=Prompt:300,400" rel="stylesheet"> -->
+        <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond" rel="stylesheet">
+
+        <link rel="stylesheet" href="assets/css/reset.css"/>
         <link rel="stylesheet" href="assets/css/style.css"/>
     
     </head>
 
     <body>
 
-        <h1>Trivia Game</h1>
+        <h1>On the elements of the periodic table</h1>
 
-        <button id="startButton">Start!</button>
-        <div id="timer"></div> <!-- displays in function decrement -->
+        <section class="clearfix">
+        <button id="startButton">BEGIN</button>
+
         <div id="question"></div>
         <div id="answers"></div>
+        <div id="timer"></div> <!-- displays in function decrement -->
         <div id="finalScore"></div>
         <div id="playAgain"></div>
+
+        </section>
 
         <script type="text/javascript" src="assets/javascript/app.js"></script>
 
