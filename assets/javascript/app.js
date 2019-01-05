@@ -1,202 +1,221 @@
-//////////////////////////////////////////////////////////////////////////////
-// INITIALIZE / GLOBAL VARIABLES
-//////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
+// GAME KEY
+/////////////////////////////////////////////
 
-$(document).ready(function () {
+var questions = [{
+    question: "Changing the number of these particles in an atom forms ions.",
+    answers: ["protons", "electrons", "neutrons"],
+    correctAnswer: "electrons",
+    image: "../images/atom-animation.gif"
+}, {
+    question: "The same elements occur everywhere in the known universe.",
+    answers: ["true", "false"],
+    correctAnswer: "true",
+    image: "../images/5oCq.gif"
+}, {
+    question: "This is the third most abundant element in Earth's mass.",
+    answers: ["iron", "oxygen", "silicon", "magnesium"],
+    correctAnswer: "silicon",
+    image: "../images/atom-animation.gif"
+}, {
+    question: "This was the first man-made element.",
+    answers: ["Einsteinium", "Astatine", "Plutonium", "Technetium"],
+    correctAnswer: "Technetium",
+    image: ""
+}, {
+    question: "What's the atomic number of Oxygen?",
+    answers: ["2", "3", "5", "8"],
+    correctAnswer: "8",
+    image: "../images/atom-animation.gif"
+}];
 
-    var guessTimer = 10;
-    var intervalId;
-    var rightAnswers = 0;
-    var wrongAnswers = 0;
-    var timeOuts = 0;
+/////////////////////////////////////////////
+// GAME FUNCTIONALITY
+/////////////////////////////////////////////
 
-    var gameKey = [
-        {
-            question: "Changing the number of these particles in an atom forms ions.",
-            choices: ["protons", "electrons", "neutrons"],
-            answer: "electrons",
-            answerMsg: "Here's a fact about ions.",
-            answerImg: "../images/atom-animation.gif"
-        },
-        {
-            question: "The same elements occur everywhere in the known universe.",
-            choices: ["true", "false"],
-            answer: "true",
-            answerMsg: "",
-            answerImg: "../images/5oCq.gif"
-        },
-        {
-            question: "This is the third most abundant element in Earth's mass.",
-            choices: ["iron", "oxygen", "silicon", "magnesium"],
-            answer: "silicon",
-            answerMsg: "Here's something interesting",
-            answerImg: "../images/atom-animation.gif"
-        },
-        {
-            question: "This was the first man-made element.",
-            choices: ["Einsteinium", "Astatine", "Plutonium", "Technetium"],
-            answer: "Technetium",
-            answerMsg: "",
-            answerImg: ""
-        },
-        {
-            question: "What's the atomic number of Oxygen?",
-            choices: ["2", "3", "5", "8"],
-            answer: "8",
-            answerMsg: "",
-            answerImg: "../images/atom-animation.gif"
+var quiz = $("#quiz");
+var timerStart = 10;
+var timer;
+
+// Game object, with key values that change within each function
+
+var game = {
+
+    questions: questions,
+    currentQuestion: 0,
+    counter: timerStart,
+    correct: 0,
+    incorrect: 0,
+
+    // TIMER
+    countdown: function () {
+
+        // Decrements timer
+        game.counter--;
+        
+        // Displays counter start number based on timerStart variable
+        $("#counter-number").text(game.counter);
+
+        // Stops timer once it reaches zero and triggers timeout functionality
+        if (game.counter === 0) {
+            game.timeUp();
         }
-    ];
+    },
 
-    var gameLength = gameKey.length;
+    // SHOW QUESTION
+    loadQuestion: function () {
 
-    //////////////////////////////////////////////////////////////////////////////
-    // TIMER FUNCTIONS
-    //////////////////////////////////////////////////////////////////////////////
+        // Sets timer for 10 seconds
+        timer = setInterval(game.countdown, 1000);
 
-    function runTimer() {
-        clearInterval(intervalId);
-        intervalId = setInterval(decrement, 1000);
-        $("#timer").show();
-    }
+        // Inputs html to show the current question
+        quiz.html("<h2>" + questions[this.currentQuestion].question + "</h2>");
 
-    function decrement() {
-        guessTimer--;
-        $("#timer").html(guessTimer);
-
-        if (guessTimer === 0) {
-            stop();
-            timeOut();
+        // Loops through game key array and displays question on quiz element
+        for (var i = 0; i < questions[this.currentQuestion].answers.length; i++) {
+            quiz.append("<button class='answer-button' id='button' data-name='" + questions[this.currentQuestion].answers[i]
+            + "'>" + questions[this.currentQuestion].answers[i] + "</button>");
         }
-    }
+    },
 
-    function stop() {
-        clearInterval(intervalId);
-    }
+    // MOVE TO THE NEXT QUESTION
+    nextQuestion: function () {
 
-    //////////////////////////////////////////////////////////////////////////////
-    // GAME FUNCTIONS
-    //////////////////////////////////////////////////////////////////////////////
+        // Resets the timer
+        game.counter = timerStart;
 
-    function reset() {
-        $("#question").empty();
-        $("#answers").empty();
-        stop();
-        $("#timer").hide();
-        guessTimer = 10;
-    }
+        // Shows the timer
+        $("#counter-number").text(game.counter);
 
-    function rightAnswer() {
-        rightAnswers++;
-        reset();
-        $("#question").html("Correct.");
-        // $("#answers").append("<img src='https://via.placeholder.com/150'/>");
-        // add: show congratulatory message plus a bonus fact about the answer
-        setTimeout(newQuestion, 3000);
-    }
+        // Increments to the next question in the array
+        game.currentQuestion++;
 
-    function rightAnswerMsg() {
+        // Triggers the function that shows the question
+        game.loadQuestion();
+    },
 
-    }
+    // TIMEOUT FUNCTION
+    timeUp: function () {
 
-    function wrongAnswer() {
-        wrongAnswers++;
-        reset();
-        $("#question").html("Here's the correct answer.");
-        // add: show correct answer
-        // $("#answers").append("<img src='https://via.placeholder.com/150'/>");
-        setTimeout(newQuestion, 3000);
-    }
+        // Clears timer and alerts the user that time's up
+        clearInterval(timer);
+        $("#counter-number").html(game.counter);
+        quiz.html("<h2>Time's up.</h2>");
 
-    function timeOut() {
-        timeOuts++;
-        reset();
-        $("#question").html("Here's the correct answer.");
-        // $("#answers").append("<img src='https://via.placeholder.com/150'/>");
-        // add: show correct answer
-        // question and answer are defined within the newQuestion function
-        setTimeout(newQuestion, 3000);
-    }
+        // Shows the user the correct answer
+        quiz.append("<h3>The correct answer is: " + questions[this.currentQuestion].correctAnswer);
+        quiz.append("<img src='" + questions[this.currentQuestion].image + "' />");
 
-    function newQuestion() {
-
-        reset();
-
-        // stops question generation after length of array
-        if ((rightAnswers + wrongAnswers + timeOuts) >= gameLength) {
-            gameOver();
-
-        } else {
-
-            // start the timer
-            runTimer();
-
-            // generate a random question
-            // this will need to stop a question from repeating somehow
-            var randomQ = Math.floor(Math.random() * gameKey.length);
-            var currentQ = gameKey[randomQ];
-
-            // show random question in browser
-            var q = currentQ.question;
-            $("#question").append(q);
-
-            // show answer choices in browser
-            for (var i = 0; i < currentQ.choices.length; i++) {
-                var answerBank = currentQ.choices[i];
-                $("#answers").append("<div class='answer'>" + answerBank + "</div>"); // shows answers
-            }
-
-            // store correct answer
-            var a = currentQ.answer;
-
-            // activate user interactivity
-            userGuess();
-
-            function userGuess() {
-
-                $(".answer").on("click", function () {
-
-                    var userGuess = (this).innerHTML;
-
-                    if (userGuess === a) {
-                        rightAnswer();
-                    } else if (userGuess !== a) {
-                        wrongAnswer();
-                    } else {
-                        timeOut();
-                    }
-                })
-            }
+        // If user has completed all questions, shows quiz results
+        if (game.currentQuestion === questions.length - 1) {
+            setTimeout(game.results, 3 * 1000);
         }
+        // If questions remain, waits 3 seconds and goes to next question
+        else {
+            setTimeout(game.nextQuestion, 3 * 1000);
+        }
+    },
+
+    // SHOWS USER QUIZ RESULTS
+    results: function () {
+
+        // Clears timer and shows user quiz results
+        clearInterval(timer);
+
+        quiz.html("<h2>Here's how you did.</h2>");
+
+        $("#counter-number").text(game.counter);
+
+        quiz.append("<h2>Correct answers: " + game.correct + "</h3>");
+        quiz.append("<h3>Incorrect answers: " + game.incorrect + "</h3>");
+        quiz.append("<h3>Timeouts: " + (questions.length = (game.incorrect + game.correct)) + "</h3>");
+        quiz.append("<br><button id='start-over'>Start over?</button>");
+    },
+
+    // CHECKS ANSWERS
+    clicked: function (e) {
+
+        // Clears timer
+        clearInterval(timer);
+
+        // Compares the answer the user clicked with the correct answer
+        // Then triggers appropriate function
+        if ($(e.target).attr("data-name") === questions[this.currentQuestion].correctAnswer) {
+            this.answeredCorrectly();
+        }
+        else {
+            this.answeredIncorrectly();
+        }
+    },
+
+    // IF USER ANSWERS INCORRECTLY...
+    answeredIncorrectly: function () {
+        
+        clearInterval(timer);
+
+        // Increments up count for incorrect variable
+        game.incorrect++;
+        quiz.html("<h2>Incorrect.</h2>");
+
+        // Shows user correct answer
+        quiz.append("<h3>The correct answer is: " + questions[game.currentQuestion].correctAnswer + "</h3>");
+        quiz.append("<img src='" + questions[game.currentQuestion].image + "' />");
+
+        // If no questions remain, shows results
+        if (game.currentQuestion === questions.length - 1) {
+            setTimeout(game.results, 3 * 1000);
+        }
+        // If questions remain, goes to next question
+        else {
+            setTimeout(game.nextQuestion, 3 * 1000);
+        }
+    },
+
+    // IF USER ANSWERS CORRECTLY...
+    answeredCorrectly: function () {
+
+        clearInterval(timer);
+        
+        // Increments up count for correct variable
+        game.correct++;
+        quiz.html("<h2>Correct!</h2>");
+
+        // Shows user correct answer
+        quiz.append("<img src='" + questions[game.currentQuestion].image + "' />");
+
+        // If no questions remain, shows results
+        if (game.currentQuestion === questions.length - 1) {
+            setTimeout(game.results, 3 * 1000);
+        }
+        // If questions remain, goes to next question
+        else {
+            setTimeout(game.nextQuestion, 3 * 1000);
+        }
+    },
+
+    // RESETS GAME IF USER SELECTS start-over BUTTON
+    reset: function () {
+        this.currentQuestion = 0;
+        this.counter = timerStart;
+        this.correct = 0;
+        this.incorrect = 0;
+        this.loadQuestion();
     }
+};
 
-    function gameOver() {
+/////////////////////////////////////////////
+// CLICK EVENTS THAT TRIGGER FUNCTIONALITY
+/////////////////////////////////////////////
 
-        reset();
-
-        // show scoreboard
-        $("#finalScore").append("<div>Right answers: " + rightAnswers + "</div>" +
-            "<div>Wrong answers: " + wrongAnswers + "</div>" +
-            "<div>Timeouts: " + timeOuts + "</div>")
-
-        // show play again button
-        $("#playAgain").append("<button>" + "Try again" + "</button>");
-
-        // THIS CLICK EVENT APPENDS THE BUTTON AND SCOREBOARD INFINITELY:
-        // $("#playAgain").on("click", newQuestion());
-    }
-
-    // $("#playAgain").on("click", newQuestion());
-
-    //////////////////////////////////////////////////////////////////////////////
-    // START GAME
-    //////////////////////////////////////////////////////////////////////////////
-
-
-    $("#startButton").on("click", function () {
-        newQuestion();
-        $("#startButton").hide();
-    });
-
+$(document).on("click", "#start-over", function () {
+    game.reset();
 });
 
+$(document).on("click", ".answer-button", function (e) {
+    game.clicked(e);
+});
+
+$(document).on("click", "#start-button", function () {
+    $("#wrapper").append("<h2>Time remaining: <span id='counter-number'>10</span> seconds</h2>");
+    game.loadQuestion();
+});
