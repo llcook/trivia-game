@@ -133,14 +133,14 @@ var game = {
     },
 
     // CHECKS ANSWERS
-    clicked: function (e) {
+    clicked: function (selectedAnswer) {
 
         // Clears timer
         clearInterval(timer);
 
         // Compares the answer the user clicked with the correct answer
         // Then triggers appropriate function
-        if ($(e.target).attr("data-name") === questions[this.currentQuestion].correctAnswer) {
+        if ($(selectedAnswer.target).attr("data-name") === questions[this.currentQuestion].correctAnswer) {
             this.answeredCorrectly();
         }
         else {
@@ -207,15 +207,18 @@ var game = {
 // CLICK EVENTS THAT TRIGGER FUNCTIONALITY
 /////////////////////////////////////////////
 
-$(document).on("click", "#start-over", function () {
-    game.reset();
-});
-
-$(document).on("click", ".answer-button", function (e) {
-    game.clicked(e);
-});
-
+// Starts game when user clicks start-button
 $(document).on("click", "#start-button", function () {
     $("#wrapper").append("<h2>Time remaining: <span id='counter-number'>10</span> seconds</h2>");
     game.loadQuestion();
+});
+
+// Compares answer with correct answer when user clicks answer-button
+$(document).on("click", ".answer-button", function (selectedAnswer) {
+    game.clicked(selectedAnswer);
+});
+
+// Resets game when user selects start-over button
+$(document).on("click", "#start-over", function () {
+    game.reset();
 });
