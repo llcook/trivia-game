@@ -69,7 +69,7 @@ var game = {
         timer = setInterval(game.countdown, 1000);
 
         // Inputs html to show the current question
-        quiz.html("<h2>" + questions[this.currentQuestion].question + "</h2>");
+        quiz.html("<h2 id='question'>" + questions[this.currentQuestion].question + "</h2>");
 
         // Loops through game key array and displays question on quiz element
         for (var i = 0; i < questions[this.currentQuestion].answers.length; i++) {
@@ -158,7 +158,7 @@ var game = {
         quiz.html("<h2>Incorrect.</h2>");
 
         // Shows user correct answer
-        quiz.append("<h3>The correct answer is: " + questions[game.currentQuestion].correctAnswer + "</h3>");
+        quiz.append("<h3 id='correct'>The correct answer is: " + questions[game.currentQuestion].correctAnswer + "</h3>");
         quiz.append("<img src='" + questions[game.currentQuestion].image + "' />");
 
         // If no questions remain, shows results
@@ -209,7 +209,7 @@ var game = {
 
 // Starts game when user clicks start-button
 $(document).on("click", "#start-button", function () {
-    $("#wrapper").append("<h2>Time remaining: <span id='counter-number'>10</span> seconds</h2>");
+    $("#wrapper").append("<div id='timer'><h2>Time remaining: <span id='counter-number'>10</span> seconds</h2></div>");
     game.loadQuestion();
 });
 
